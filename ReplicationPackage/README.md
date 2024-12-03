@@ -106,7 +106,7 @@ dotnet-rgit --cmd simulate-recommender --recommendation-strategy RetentionRec --
 # TurnoverRec Recommender
 dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --simulation-type "SeededRandom" --conf-path <path_to_config_file>
 # Sofia Recommender
-dotnet-rgit --cmd simulate-recommender --recommendation-strategy sofia --simulation-type "SeededRandom" --conf-path <path_to_config_file>
+dotnet-rgit --cmd simulate-recommender --recommendation-strategy Sofia --simulation-type "SeededRandom" --conf-path <path_to_config_file>
 ```
 
 ---
