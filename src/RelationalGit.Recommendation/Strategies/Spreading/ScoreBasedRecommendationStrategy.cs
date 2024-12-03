@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using RelationalGit.Data;
 using RelationalGit.Simulation;
 using System;
@@ -130,7 +130,7 @@ namespace RelationalGit.Recommendation
                 result.Add((newReviewerSet, selectedCandidates));
                
             }
-            if (ShouldReplaceReviewer(pullRequestContext, strategies) || (ShouldFarReplaceReviewer(pullRequestContext, strategies)))
+            if (ShouldReplaceReviewer(pullRequestContext, strategies) || (ShouldFarReplaceReviewer(pullRequestContext, strategies) && !pullRequestContext.PullRequestFilesAreSafe)|| (ShouldHoarderReplace(pullRequestContext, strategies) && pullRequestContext.HasHoarder() && !ShouldAddReviewer(pullRequestContext, strategies)))
             {
                 var selectedCandidatesLength = GetSelectedCandidatesLength(pullRequestContext, strategies, "replace");
                 var numberOfReplacements = Math.Min(availableDevs.Length, selectedCandidatesLength);
@@ -285,6 +285,7 @@ namespace RelationalGit.Recommendation
             }
 
             var newReviewerSet = fixedReviewers.Concat(selectedCandidates);
+            
             return (newReviewerSet,selectedCandidates);
         }
 
@@ -374,26 +375,86 @@ namespace RelationalGit.Recommendation
 
             return result;
         }
-
-        private bool ShouldAddReviewer(PullRequestContext pullRequestContext, PullRequestReviewerSelectionStrategy[] strategies)
+        private bool ShouldHoarderReplace(PullRequestContext pullRequestContext, PullRequestReviewerSelectionStrategy[] strategies)
         {
+
+            if (pullRequestContext.ActualReviewers.Length == 0)
+                return false;
+
             var result = false;
 
             if (strategies.Length == 0)
             {
+                result = _pullRequestReviewerSelectionDefaultStrategy.Action.StartsWith("addAndReplace") || _pullRequestReviewerSelectionDefaultStrategy.Action.StartsWith("addHoarded");
+            }
+            else
+            {
+                result = strategies.Any(q => q.Action.StartsWith("addAndReplace") || q.Action.StartsWith("addHoarded"));
+            }
+
+            return result;
+        }
+
+        private bool ShouldAddReviewer(PullRequestContext pullRequestContext, PullRequestReviewerSelectionStrategy[] strategies)
+        {
+            var result = false;
+            var leaver_result = false;
+            var add_abandon = false;
+            var add_hoarded_k = false;
+
+            if (strategies.Length == 0)
+            {
                 result =  _pullRequestReviewerSelectionDefaultStrategy.Action == "add";
+                leaver_result = _pullRequestReviewerSelectionDefaultStrategy.Action == "addleaver";
+                add_abandon = _pullRequestReviewerSelectionDefaultStrategy.Action == "addAndReplace";
+                add_hoarded_k = _pullRequestReviewerSelectionDefaultStrategy.Action.StartsWith("addHoarded");
+
             }
             else
             {
                 result = strategies.Any(q => q.Action == "add");
-            }
+                leaver_result = strategies.Any(q => q.Action == "addleaver");
+                add_abandon = strategies.Any(q => q.Action == "addAndReplace");            
+                add_hoarded_k = strategies.Any(q => q.Action.StartsWith("addHoarded"));            
+                }
 
             if (result)
             {
+
+                Console.WriteLine(_pullRequestReviewerSelectionDefaultStrategy);
+                Console.WriteLine(_pullRequestReviewerSelectionDefaultStrategy.Action);
+
                 if (!_addOnlyToUnsafePullrequests.HasValue || !_addOnlyToUnsafePullrequests.Value)
                     return true;
 
                 if (_addOnlyToUnsafePullrequests.Value && !pullRequestContext.PullRequestFilesAreSafe)
+                    return true;
+            }
+            else if (leaver_result)
+            {
+                if (!_addOnlyToUnsafePullrequests.HasValue || !_addOnlyToUnsafePullrequests.Value)
+                    return true;
+
+                if (_addOnlyToUnsafePullrequests.Value && pullRequestContext.PullHasLeaver)
+                    return true;
+            }
+            else if (add_abandon)
+            {
+
+                if (!_addOnlyToUnsafePullrequests.HasValue || !_addOnlyToUnsafePullrequests.Value)
+                    return true;
+
+                if (_addOnlyToUnsafePullrequests.Value && pullRequestContext.PullRequestFilesAreAbandon)
+                    return true;
+            }
+            else if (add_hoarded_k)
+            {
+                
+                if (!_addOnlyToUnsafePullrequests.HasValue || !_addOnlyToUnsafePullrequests.Value)
+                    return true;
+                
+                int k = int.Parse(_pullRequestReviewerSelectionDefaultStrategy.Action.Split('_')[1]);
+                if (_addOnlyToUnsafePullrequests.Value && pullRequestContext.PullRequestIsHoarded_K(k))
                     return true;
             }
 
