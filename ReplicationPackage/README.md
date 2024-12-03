@@ -89,7 +89,7 @@ dotnet-rgit --cmd analyze-simulations --analyze-result-path "path_to_result" --n
 # AuthorshipRec Recommender
 dotnet-rgit --cmd simulate-recommender --recommendation-strategy AuthorshipRec --simulation-type "SeededRandom" --conf-path <path_to_config_file>
 # RevOwnRec Recommender
-dotnet-rgit --cmd simulate-recommender --recommendation-strategy RecOwnRec --simulation-type "SeededRandom" --conf-path <path_to_config_file>
+dotnet-rgit --cmd simulate-recommender --recommendation-strategy RevOwnRec --simulation-type "SeededRandom" --conf-path <path_to_config_file>
 # cHRev Recommender
 dotnet-rgit --cmd simulate-recommender --recommendation-strategy cHRev --simulation-type "Random" --conf-path <path_to_config_file>
 ```
