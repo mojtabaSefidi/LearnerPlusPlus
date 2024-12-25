@@ -143,36 +143,29 @@ dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --c
 To run the Hoarded-X strategy, you should apply the following changes to the config file of each project.
 
 ```
+"PullRequestReviewerSelectionStrategy" : "0:nothing-nothing,-:addHoarded_X-1",
+```
+
+The X parameter should be adjusted based on the recommender. In our paper, we run simulations for X = {2,3,4}. For example, if you want to run the **Hoarded-2** recommender, you should change the config file like this:
+
+```
 "PullRequestReviewerSelectionStrategy" : "0:nothing-nothing,-:addHoarded_2-1",
 ```
 
-Then, you should run the FaR-Aware recommender for each project.
+After adjusting the config files for all projects, you should run the Hoarded-X approach for each project.
 
 ```PowerShell
-# FaR-Aware recommender for CoreFX
+# Hoarded-X recommender for CoreFX
 dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --conf-path <path_to_CoreFX_config_file>
-# FaR-Aware recommender for CoreCLR
+# Hoarded-X recommender for CoreCLR
 dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --conf-path <path_to_CoreCLR_config_file>
-# FaR-Aware recommender for Roslyn
+#Hoarded-X recommender for Roslyn
 dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --conf-path <path_to_Roslyn_config_file>
-# FaR-Aware recommender for Rust
+# Hoarded-X recommender for Rust
 dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --conf-path <path_to_Rust_config_file>
-# FaR-Aware recommender for Kubernetes
+# Hoarded-X recommender for Kubernetes
 dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --conf-path <path_to_Kubernetes_config_file>
 ```
----
-
-```PowerShell
-# LearnRec Recommender
-dotnet-rgit --cmd simulate-recommender --recommendation-strategy LearnRec --simulation-type "SeededRandom" --conf-path <path_to_config_file>
-# RetentionRec Recommender
-dotnet-rgit --cmd simulate-recommender --recommendation-strategy RetentionRec --simulation-type "SeededRandom" --conf-path <path_to_config_file>
-# TurnoverRec Recommender
-dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --simulation-type "SeededRandom" --conf-path <path_to_config_file>
-# Sofia Recommender
-dotnet-rgit --cmd simulate-recommender --recommendation-strategy Sofia --simulation-type "SeededRandom" --conf-path <path_to_config_file>
-```
-
 ---
 
 ### Empirical RQ4, Review Workload: How is the review workload distributed across developers?
