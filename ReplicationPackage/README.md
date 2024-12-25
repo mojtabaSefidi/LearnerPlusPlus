@@ -4,7 +4,7 @@ The overall steps are
 
 1. Install Relational Git
 2. Get the Database
-3. Run the Simulations (seeded random or random). Please see the TSE paper for more details on why we used seeded random.
+3. Run the Simulations (seeded random or random). Please take a look at the TSE paper for more details on why we used seeded random.
 4. Dump the Simulation Data to CSV
 5. Calculate the Expertise, Workload, and FaR measures
 
@@ -14,9 +14,9 @@ The overall steps are
 
 ## Get the Database
 
-1) Restore the backup of the data into MS Sql Server. For each studied project there is a separate database. You can select individual files from the [db backup](https://www.dropbox.com/home/SofiaWL-Databases). Note, some files are over 15GB.
+1) Restore the data backup to an MS SQL Server. Each studied project has a separate database. You can select individual files from the [db backup](https://www.dropbox.com/home/SofiaWL-Databases). Note that some files are over 15GB.
 2) Copy the [configuration files](config).
-3) Open and modify each configuration file to set the connection string. You need to provide the server address along with the credentials. The following snippet shows a sample of how connection string should be set.
+3) Open and modify each configuration file to set the connection string. You need to provide the server address along with the credentials. The following snippet shows a sample of how the connection string should be set.
 
 ```json
  {
@@ -29,7 +29,7 @@ The overall steps are
  }
 ```
 
-4) Open [simulations.ps1](simulations.ps1) using an editor and make sure the config variables defined at the top of the file are reffering to the correct location of the downloaded config files. 
+4) Open [simulations.ps1](simulations.ps1) using an editor and make sure the config variables defined at the top of the file refer to the correct location of the downloaded config files. 
 
 ```powershell
 # Each of the following variables contains the absolute path of the corresponding configuation file.
@@ -54,49 +54,37 @@ This scripts runs all the defined reviewer recommendation algorithms accross all
 
 ## Research Questions
 
-In following sections, we show which simulations are used for which research questions. For each simulation, a sample is provided that illustrates how the simulation can be run using the tool.
+In the following sections, we show which simulations are used for which research questions. For each simulation, a sample illustrates how the simulation can be run using the tool.
 
-### Empirical RQ1, Review and Turnover: What is the reduction in files at risk to turnover when both authors and reviewers are considered knowledgeable?
+### Simulation RQ1, Replication: Which existing reviewer recommender spreads knowledge most efficiently among developers?
 
+**Note**: In order to select between ```Random``` and ```SeededRandom```, use the ```--simulation-type``` command. If you want to run the seeded version, set the value of ```--simulation-type``` to ```Random``` for **cHRev** and all the other algorithms to ```SeededRandom```. If you wish to run the random version, set the value of ```--simulation-type``` to ```Random``` for all the algorithms.
 
 ```PowerShell
-# committers only
-dotnet-rgit --cmd simulate-recommender --recommendation-strategy NoReviews --conf-path <path_to_config_file>
-# committers + reviewers = what happended in "Reality"
+# Reality
 dotnet-rgit --cmd simulate-recommender --recommendation-strategy Reality --conf-path <path_to_config_file>
-```
-
-Log into the database and run
-
-```SQL
--- Get the Id of the simulation 
-select Id, KnowledgeShareStrategyType, StartDateTime from LossSimulations
-```
-
-Using the Id returned from above, compare the knowlege loss with and without considering reviewers knowledgable run the following: 
-
-```PowerShell
-dotnet-rgit --cmd analyze-simulations --analyze-result-path "path_to_result" --no-reviews-simulation <no_reviews_sim_id> --reality-simulation <reality_sim_id>  --conf-path <path_to_config_file>
-```
-
----
-
-### Simulation RQ2, Ownership Aware: Does recommending reviewers based on code and review file ownership reduce the number of files at risk to turnover?
-
-**Note**: In order to select between Random and SeededRandom use the --simulation-type command. If you want to run the seeded version, set the value of --simulation-type to Random for cHRev and all the other algorithms to "SeededRandom". If you wish to run the random version, set the value of --simulation-type to Random for all the algorithms.
-
-```PowerShell
+# cHRev Recommender
+dotnet-rgit --cmd simulate-recommender --recommendation-strategy cHRev --simulation-type "Random" --conf-path <path_to_config_file>
 # AuthorshipRec Recommender
 dotnet-rgit --cmd simulate-recommender --recommendation-strategy AuthorshipRec --simulation-type "SeededRandom" --conf-path <path_to_config_file>
 # RevOwnRec Recommender
 dotnet-rgit --cmd simulate-recommender --recommendation-strategy RevOwnRec --simulation-type "SeededRandom" --conf-path <path_to_config_file>
-# cHRev Recommender
-dotnet-rgit --cmd simulate-recommender --recommendation-strategy cHRev --simulation-type "Random" --conf-path <path_to_config_file>
+# LearnRec Recommender
+dotnet-rgit --cmd simulate-recommender --recommendation-strategy LearnRec --simulation-type "SeededRandom" --conf-path <path_to_config_file>
+# RetentionRec Recommender
+dotnet-rgit --cmd simulate-recommender --recommendation-strategy RetentionRec --simulation-type "SeededRandom" --conf-path <path_to_config_file>
+# TurnoverRec Recommender
+dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --simulation-type "SeededRandom" --conf-path <path_to_config_file>
+# Sofia Recommender
+dotnet-rgit --cmd simulate-recommender --recommendation-strategy Sofia --simulation-type "SeededRandom" --conf-path <path_to_config_file>
+#WhoDo recommender
+dotnet-rgit --cmd simulate-recommender --recommendation-strategy WhoDo --simulation-type "SeededRandom" --conf-path <path_to_config_file>
+# SofiaWL Recommender
+dotnet-rgit --cmd simulate-recommender --recommendation-strategy SofiaWL --simulation-type "SeededRandom" --conf-path <path_to_config_file>
 ```
-
 ---
 
-### Simulation RQ3, Turnover Aware: Can we reduce the number of files at risk to turnover by developing learning and retention aware review recommenders?
+### Simulation RQ3, Turnover Aware: Can we reduce the number of files at risk of turnover by developing learning and retention-aware review recommenders?
 
 ```PowerShell
 # LearnRec Recommender
