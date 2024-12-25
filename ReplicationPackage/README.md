@@ -84,7 +84,33 @@ dotnet-rgit --cmd simulate-recommender --recommendation-strategy SofiaWL --simul
 ```
 ---
 
-### Simulation RQ3, Turnover Aware: Can we reduce the number of files at risk of turnover by developing learning and retention-aware review recommenders?
+### Simulation RQ2, Recommenders++: How does adding an additional reviewer for risky pull requests affect the outcome measures?
+
+To run the Recommenders++ strategy, you should apply the following changes to the config file of each project.
+
+```
+"PullRequestReviewerSelectionStrategy" : "0:nothing-nothing,-:add-1",
+```
+
+In the next step, run simulation for each recommender. Since the Recommenders++ strategy suggests an additional learner for risky pull requests and does not replace any reviewer, there is no need to use the ```--simulation-type``` command.
+
+```PowerShell
+# AuthorshipRec++ Recommender
+dotnet-rgit --cmd simulate-recommender --recommendation-strategy AuthorshipRec --conf-path <path_to_config_file>
+# RevOwnRec++ Recommender
+dotnet-rgit --cmd simulate-recommender --recommendation-strategy RevOwnRec --conf-path <path_to_config_file>
+# cHRev++ Recommender
+dotnet-rgit --cmd simulate-recommender --recommendation-strategy cHRev --conf-path <path_to_config_file>
+# LearnRec++ Recommender
+dotnet-rgit --cmd simulate-recommender --recommendation-strategy LearnRec --conf-path <path_to_config_file>
+# RetentionRec++ Recommender
+dotnet-rgit --cmd simulate-recommender --recommendation-strategy RetentionRec --conf-path <path_to_config_file>
+# TurnoverRec++ Recommender
+dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --conf-path <path_to_config_file>
+#WhoDo++ recommender
+dotnet-rgit --cmd simulate-recommender --recommendation-strategy WhoDo --conf-path <path_to_config_file>
+```
+---
 
 ```PowerShell
 # LearnRec Recommender
