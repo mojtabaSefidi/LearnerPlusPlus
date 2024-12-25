@@ -115,7 +115,7 @@ dotnet-rgit --cmd simulate-recommender --recommendation-strategy WhoDo --conf-pa
 
 ### Simulation RQ3, FaR-Aware: How effective is the combined use of TurnoverRec++ for abandoned files and random replacement for hoarded files in spreading knowledge?
 
-To run the Recommenders++ strategy, you should apply the following changes to the config file of each project.
+To run the FaR-Aware approach, you should apply the following changes to the config file of each project.
 
 ```
 "PullRequestReviewerSelectionStrategy" : "0:nothing-nothing,-:addAndReplace-1",
@@ -137,6 +137,30 @@ dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --c
 ```
 ---
 
+
+### Simulation RQ4, Hoarded-X: How can we control the trade-off between ΔFaR and AddedPR when we recommend an additional learner for risky pull requests?
+
+To run the Hoarded-X strategy, you should apply the following changes to the config file of each project.
+
+```
+"PullRequestReviewerSelectionStrategy" : "0:nothing-nothing,-:addHoarded_2-1",
+```
+
+Then, you should run the FaR-Aware recommender for each project.
+
+```PowerShell
+# FaR-Aware recommender for CoreFX
+dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --conf-path <path_to_CoreFX_config_file>
+# FaR-Aware recommender for CoreCLR
+dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --conf-path <path_to_CoreCLR_config_file>
+# FaR-Aware recommender for Roslyn
+dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --conf-path <path_to_Roslyn_config_file>
+# FaR-Aware recommender for Rust
+dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --conf-path <path_to_Rust_config_file>
+# FaR-Aware recommender for Kubernetes
+dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --conf-path <path_to_Kubernetes_config_file>
+```
+---
 
 ```PowerShell
 # LearnRec Recommender
