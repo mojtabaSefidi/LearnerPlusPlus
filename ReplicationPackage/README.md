@@ -84,6 +84,8 @@ dotnet-rgit --cmd simulate-recommender --recommendation-strategy SofiaWL --simul
 ```
 ---
 
+**Note:** To run the simulations for each of the following research questions, you need to change the config file of all five projects. We suggest creating an exclusive config file for each research question to avoid confusion.
+
 ### Simulation RQ2, Recommenders++: How does adding an additional reviewer for risky pull requests affect the outcome measures?
 
 To run the Recommenders++ strategy, you should apply the following changes to the config file of each project.
@@ -107,7 +109,7 @@ dotnet-rgit --cmd simulate-recommender --recommendation-strategy LearnRec --conf
 dotnet-rgit --cmd simulate-recommender --recommendation-strategy RetentionRec --conf-path <path_to_config_file>
 # TurnoverRec++ Recommender
 dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --conf-path <path_to_config_file>
-#WhoDo++ recommender
+# WhoDo++ recommender
 dotnet-rgit --cmd simulate-recommender --recommendation-strategy WhoDo --conf-path <path_to_config_file>
 ```
 ---
@@ -115,25 +117,25 @@ dotnet-rgit --cmd simulate-recommender --recommendation-strategy WhoDo --conf-pa
 
 ### Simulation RQ3, FaR-Aware: How effective is the combined use of TurnoverRec++ for abandoned files and random replacement for hoarded files in spreading knowledge?
 
-To run the FaR-Aware approach, you should apply the following changes to the config file of each project.
+To run the FaR-Aware approach, you should apply the following changes to the config files.
 
 ```
 "PullRequestReviewerSelectionStrategy" : "0:nothing-nothing,-:addAndReplace-1",
 ```
 
-Then, you should run the FaR-Aware recommender for each project.
+Then, you should run the FaR-Aware recommender for each project. The ```--simulation-type``` command forces the recommender to replace the same reviewer in all the simulations.
 
 ```PowerShell
 # FaR-Aware recommender for CoreFX
-dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --conf-path <path_to_CoreFX_config_file>
+dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --simulation-type "SeededRandom" --conf-path <path_to_CoreFX_config_file>
 # FaR-Aware recommender for CoreCLR
-dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --conf-path <path_to_CoreCLR_config_file>
+dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --simulation-type "SeededRandom" --conf-path <path_to_CoreCLR_config_file>
 # FaR-Aware recommender for Roslyn
-dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --conf-path <path_to_Roslyn_config_file>
+dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --simulation-type "SeededRandom" --conf-path <path_to_Roslyn_config_file>
 # FaR-Aware recommender for Rust
-dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --conf-path <path_to_Rust_config_file>
+dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --simulation-type "SeededRandom" --conf-path <path_to_Rust_config_file>
 # FaR-Aware recommender for Kubernetes
-dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --conf-path <path_to_Kubernetes_config_file>
+dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --simulation-type "SeededRandom" --conf-path <path_to_Kubernetes_config_file>
 ```
 ---
 
@@ -146,25 +148,25 @@ To run the Hoarded-X strategy, you should apply the following changes to the con
 "PullRequestReviewerSelectionStrategy" : "0:nothing-nothing,-:addHoarded_X-1",
 ```
 
-The X parameter should be adjusted based on the recommender. In our paper, we run simulations for X = {2,3,4}. For example, if you want to run the **Hoarded-2** recommender, you should change the config file like this:
+The X parameter should be adjusted based on the recommender. In our paper, we run simulations for X = {2,3,4}. For example, if you want to run the **Hoarded-2** recommender, you should change the config file ss follows:
 
 ```
 "PullRequestReviewerSelectionStrategy" : "0:nothing-nothing,-:addHoarded_2-1",
 ```
 
-After adjusting the config files for all projects, you should run the Hoarded-X approach for each project.
+After adjusting the config files for all projects, you should run the Hoarded-X approach for each project. 
 
 ```PowerShell
 # Hoarded-X recommender for CoreFX
-dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --conf-path <path_to_CoreFX_config_file>
+dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --simulation-type "SeededRandom" --conf-path <path_to_CoreFX_config_file>
 # Hoarded-X recommender for CoreCLR
-dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --conf-path <path_to_CoreCLR_config_file>
+dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --simulation-type "SeededRandom" --conf-path <path_to_CoreCLR_config_file>
 #Hoarded-X recommender for Roslyn
-dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --conf-path <path_to_Roslyn_config_file>
+dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --simulation-type "SeededRandom" --conf-path <path_to_Roslyn_config_file>
 # Hoarded-X recommender for Rust
-dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --conf-path <path_to_Rust_config_file>
+dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --simulation-type "SeededRandom" --conf-path <path_to_Rust_config_file>
 # Hoarded-X recommender for Kubernetes
-dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --conf-path <path_to_Kubernetes_config_file>
+dotnet-rgit --cmd simulate-recommender --recommendation-strategy TurnoverRec --simulation-type "SeededRandom" --conf-path <path_to_Kubernetes_config_file>
 ```
 ---
 
