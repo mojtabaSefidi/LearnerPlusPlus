@@ -54,7 +54,7 @@ This scripts runs all the defined reviewer recommendation algorithms accross all
 
 ## Research Questions
 
-In the following sections, we show which simulations are used for which research questions. For each simulation, a sample illustrates how the simulation can be run using the tool.
+The following sections show which simulations are used for each research question.
 
 ### Simulation RQ1, Replication: Which existing reviewer recommender spreads knowledge most efficiently among developers?
 
@@ -148,7 +148,7 @@ To run the Hoarded-X strategy, you should apply the following changes to the con
 "PullRequestReviewerSelectionStrategy" : "0:nothing-nothing,-:addHoarded_X-1",
 ```
 
-The X parameter should be adjusted based on the recommender. In our paper, we run simulations for X = {2,3,4}. For example, if you want to run the **Hoarded-2** recommender, you should change the config file ss follows:
+The X parameter should be adjusted based on the recommender. In our paper, we run simulations for X = {2,3,4}. For example, if you want to run the **Hoarded-2** recommender, you should change the config files as follows:
 
 ```
 "PullRequestReviewerSelectionStrategy" : "0:nothing-nothing,-:addHoarded_2-1",
